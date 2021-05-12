@@ -17,7 +17,6 @@ func Mysql() {
 	name := beego.AppConfig.String("dbname")
 	charset := beego.AppConfig.String("dbcharset")
 	maxCoonns, _ := beego.AppConfig.Int("dbmaxCoonns")
-
 	global.DB, err = gorm.Open("mysql", user+":"+pwd+"@("+host+":"+port+")/"+name+"?charset="+charset+"&parseTime=true")
 	if err != nil {
 		logs.Error(err)

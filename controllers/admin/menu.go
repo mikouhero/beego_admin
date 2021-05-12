@@ -25,38 +25,24 @@ func (this *MenuController) Get() {
 }
 
 func (this *MenuController) List() {
-	where := services.AdminMenuWhere{}
-	where.PageSize = 10
-	where.Page = 1
-	where.Status = -1
-	where.Level = -1
-	where.Pid = -1
-	err := json.Unmarshal(this.Ctx.Input.RequestBody, &where)
-	if err != nil {
-		this.json(500,err.Error(),"")
-	}
-
-	offset := (where.Page - 1) * where.PageSize
-	limit := where.PageSize
-
-	aus, total, e := services.GetAdminMenuList(where, offset, limit)
+	ams, e := services.GetAdminMenuByRoleId(0, true)
 	if e != nil {
 		this.json(500, e.Error(), "")
 	}
-	this.json(0, "ok", map[string]interface{}{"list": aus, "total": total})
+	this.json(0, "ok", map[string]interface{}{"menuList": ams})
 }
 
 func (this *MenuController) Add() {
 	var AdminMenu models.AdminMenu
 	err := json.Unmarshal(this.Ctx.Input.RequestBody, &AdminMenu)
 	if err != nil {
-		this.json(500,err.Error(),"")
+		this.json(500, err.Error(), "")
 
 	}
 	valid := validation.Validation{}
 	b, err := valid.Valid(&AdminMenu)
 	if err != nil {
-		this.json(500,err.Error(),"")
+		this.json(500, err.Error(), "")
 
 	}
 	if !b {
@@ -64,13 +50,13 @@ func (this *MenuController) Add() {
 		for _, err := range valid.Errors {
 			msg += err.Message + ";"
 		}
-		this.json(500,err.Error(),"")
+		this.json(500, err.Error(), "")
 
 	}
 
 	i, e := services.CreateAdminMenu(AdminMenu)
 	if e != nil {
-		this.json(500,err.Error(),"")
+		this.json(500, err.Error(), "")
 
 	}
 	data := map[string]int{
@@ -145,4 +131,3 @@ func (this *MenuController) Status() {
 	}
 	this.json(0, "ok", "")
 }
-

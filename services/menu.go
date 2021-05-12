@@ -8,6 +8,9 @@ import (
 	"strings"
 )
 
+/**
+where 条件
+ */
 type AdminMenuWhere struct {
 	Page     int    `json:"page"`
 	PageSize int    `json:"page_size"`
@@ -17,6 +20,9 @@ type AdminMenuWhere struct {
 	Name     string `json:"name"`
 }
 
+/**
+添加菜单
+ */
 func CreateAdminMenu(am models.AdminMenu) (int, error) {
 	var num int
 	global.DB.
@@ -34,6 +40,9 @@ func CreateAdminMenu(am models.AdminMenu) (int, error) {
 	return int(am.ID), nil
 }
 
+/**
+根据id 获取菜单信息
+ */
 func GetAdminMenuById(id int) (am models.AdminMenu, e error) {
 	e = global.DB.Where(" id = ? ", uint(id)).First(&am).Error
 	if e != nil {
